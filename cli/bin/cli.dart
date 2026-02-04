@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:http/http.dart' as http;
+import 'package:command_runner/command_runner.dart';
 
 void printUsage() {
   print(
@@ -38,16 +39,20 @@ Future<String> getWikipediaArticle(String articleTitle) async {
   return 'Error: Failed to fetch article "$articleTitle". Status code: ${response.statusCode}';
 }
 
-void main(List<String> arguments) {
+void main(List<String> arguments) async {
   const version = '1.1.0';
-  if (arguments.isEmpty || arguments.first == 'help') {
-    printUsage();
-  } else if (arguments.first == 'version') {
-    print('Dartpedia CLI version :$version');
-  } else if (arguments.first == 'search') {
-    final inputArgs = arguments.length > 1 ? arguments.sublist(1) : null;
-    searchWikipedia(inputArgs);
-  } else {
-    printUsage();
-  }
+
+  var runner = CommandRunner();
+  runner.run(version);
+
+  // if (arguments.isEmpty || arguments.first == 'help') {
+  //   printUsage();
+  // } else if (arguments.first == 'version') {
+  //   print('Dartpedia CLI version :$version');
+  // } else if (arguments.first == 'search') {
+  //   final inputArgs = arguments.length > 1 ? arguments.sublist(1) : null;
+  //   searchWikipedia(inputArgs);
+  // } else {
+  //   printUsage();
+  // }
 }
