@@ -1,8 +1,35 @@
-// TODO: Put public facing types in this file.
+import 'dart:collection';
+import 'dart:io';
+import 'arguments.dart';
 
-/// Checks if you are awesome. Spoiler: you are.
 class CommandRunner {
-  Future<void> run(String input) async {
-    print('the package receved the input $input');
+  final Map<String, Command> _command = <String, Command>{};
+
+  UnmodifiableSetView<Command> get commands =>
+      UnmodifiableSetView<Command>(<Command>{..._command.values});
+
+  Future<void> run(List<String> input) async {
+    final ArgResults results = parse(input);
+
+    if (results.command != null) {
+      Object? output = await results.command!.run(results);
+      print(output.toString());
+    }
+  }
+
+  void addCommand(Command command) {
+    _command[command.name] = command;
+    command.runner = this;
+  }
+
+  ArgResults parse(List<String> input) {
+    var results = ArgResults();
+    results.command = _command[input.first];
+    return results;
+  }
+
+  String get usage {
+    final exeFile = Platform.script.path.split('/').last;
+    return 'Usage: dart bin/$exeFile <command> [commandArg?] [...options?]';
   }
 }
