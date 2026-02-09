@@ -5,7 +5,16 @@ import 'package:command_runner/command_runner.dart' as command_runner;
 void main(List<String> arguments) async {
   const version = '3.0.0';
 
-  var commandRunner = command_runner.CommandRunner();
+  var commandRunner = command_runner.CommandRunner(
+    onError: (Object error) {
+      if (error is Error) {
+        throw error;
+      }
+      if (error is Exception) {
+        print(error);
+      }
+    },
+  );
   commandRunner.addCommand(command_runner.HelpCommand());
   commandRunner.run(arguments);
 }

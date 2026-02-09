@@ -64,6 +64,7 @@ abstract class Command extends Arguments {
 
   UnmodifiableListView<Option> get options =>
       UnmodifiableListView(_options.toSet());
+
   void addFlag(String name, {String? help, String? abbr, String? valueHelp}) {
     _options.add(
       Option(
